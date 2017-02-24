@@ -50,6 +50,8 @@ export default class ReactGridLayout extends React.Component {
 
     preventCollision: PropTypes.bool,
 
+    onlyMoveStartAndFinish: PropTypes.bool,
+
     // If true, the layout will compact vertically
     verticalCompact: PropTypes.bool,
 
@@ -245,6 +247,14 @@ export default class ReactGridLayout extends React.Component {
     // Move the element to the dragged location.
     // layout = moveElement(layout, l, x, y, true /* isUserAction */);
     layout = moveElement(layout, l, x, y, true, this.props.preventCollision);
+
+    if (this.props.onlyMoveStartAndFinish){
+      var oldLayout = this.state.oldLayout;
+      var startX = oldLayout.x
+      layout = layout.map((item, index) => {
+        return (item.x == x) || (item.x == startX ) ? item : oldLayout[index]
+      })
+    }
 
     this.props.onDrag(layout, oldDragItem, l, placeholder, e, node);
 
